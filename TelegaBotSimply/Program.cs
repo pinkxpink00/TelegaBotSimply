@@ -1,37 +1,48 @@
 ﻿using Telegram.Bot;
 using Telegram.Bot.Types;
 
-class Program
+namespace TelegaBotSimply
 {
-    static void Main()
+    internal class Program
     {
-        var BotApiKey = "6952143006:AAGnQWEsAu_hgNyAfIiiK_dPzlPmy6rEn-U";
-
-        TelegramBotClient? _telegramBotClient = new TelegramBotClient(BotApiKey);
-        
-        _telegramBotClient.StartReceiving(UpdateHandler,ErrorHandler);
-        Console.WriteLine("Bot started successfully and listnening the specific channel");
-        Console.ReadKey();
-    }
-
-    public static async Task UpdateHandler(ITelegramBotClient bot, Update update, CancellationToken token)
-    {
-        string responseMessage;
-
-        if (update.Message.Sticker is not null)
+        static void Main()
         {
-            responseMessage = "Close your ass";
-        }
-        else
-        {
-            responseMessage = "I coudn't understand you";
-        }
-        
-        await bot.SendTextMessageAsync(update.Message.Chat.Id, responseMessage);
-    }
+            var botApiKey = "6952143006:AAGnQWEsAu_hgNyAfIiiK_dPzlPmy6rEn-U";
 
-    private static async Task ErrorHandler(ITelegramBotClient bot, Exception exception, CancellationToken token)
-    {
-          Console.WriteLine("Error Happened");
+            TelegramBotClient telegramBotClient = new TelegramBotClient(botApiKey);
+            
+            telegramBotClient.StartReceiving(UpdateHandler, ErrorHandler);
+            Console.WriteLine("Bot started successfully and listnening the specific channel");
+            
+            Console.ReadKey();
+        }
+
+        private static async Task UpdateHandler(ITelegramBotClient bot, Update update, CancellationToken token)
+        {
+            try
+            {
+                if (update.Message != null)
+                {
+                    if (update.Message?.Sticker != null)
+                    {
+                        string responseMessage = "Suck my cock";
+                        await bot.SendTextMessageAsync(update.Message.Chat.Id, responseMessage);
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Received an update without a message.");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error in UpdateHandler: {ex.Message}");
+            }
+        }
+
+        private static async Task ErrorHandler(ITelegramBotClient bot, Exception exception, CancellationToken token)
+        {
+            Console.WriteLine("Error....");
+        }
     }
 }
